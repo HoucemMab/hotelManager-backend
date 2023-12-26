@@ -1,8 +1,7 @@
-package com.example.checkhr.config;
+package com.example.hotelmanagertool.config;
 
-
-import com.example.checkhr.Filter.JwtTokenFilter;
-import com.example.checkhr.service.UserDetailServiceImpl;
+import com.example.hotelmanagertool.filter.JwtTokenFilter;
+import com.example.hotelmanagertool.service.UtilisateurService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -11,20 +10,11 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.ObjectPostProcessor;
-import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -35,7 +25,8 @@ public class SecurityConfig {
 
 
     @Autowired
-    private UserDetailServiceImpl userDetailService;
+    @Lazy
+    private UtilisateurService userDetailService;
 
     @Autowired
     private JwtTokenFilter jwtAuthFilter;
@@ -49,8 +40,12 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests()
-                .requestMatchers("/auth/**").permitAll() // Permit all requests to /auth/**
-                //      .anyRequest().authenticated()
+                /*.requestMatchers("/api/chambres/**").authenticated()
+                .requestMatchers("/api/feedback/**").authenticated()
+                .requestMatchers("/api/payment/**").authenticated()
+                .requestMatchers("/api/reservations/**").authenticated() */
+                .anyRequest().permitAll() // Allow unauthenticated access to other endpoints
+
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

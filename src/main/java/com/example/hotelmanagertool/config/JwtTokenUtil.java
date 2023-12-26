@@ -1,12 +1,9 @@
-package com.example.checkhr.config;
+package com.example.hotelmanagertool.config;
 
-import com.example.checkhr.model.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -16,15 +13,16 @@ import java.util.Date;
 public class JwtTokenUtil {
 
 
-    SecretKey key = Keys.secretKeyFor(io.jsonwebtoken.SignatureAlgorithm.HS512);
+    SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
-    public String generateToken(String username, Role role, Long userId) {
+    public String generateToken(String username, String role, Long userId,String name) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + 1000*60*24);
 
         return Jwts.builder()
                 .setSubject(username)
                 .claim("role",role)
+                .claim("name",name)
                 .claim("userId",userId)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)

@@ -1,28 +1,27 @@
-package com.example.checkhr.controller;
+package com.example.hotelmanagertool.controller;
 
-import com.example.checkhr.DTO.AuthRequest;
-import com.example.checkhr.model.User;
-import com.example.checkhr.service.AuthService;
+import com.example.hotelmanagertool.DTO.AuthRequest;
+import com.example.hotelmanagertool.DTO.UserDTO;
+import com.example.hotelmanagertool.entity.UtilsateurEntity;
+import com.example.hotelmanagertool.service.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/auth")
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/auth")
 @CrossOrigin("*")
 public class AuthController {
     @Autowired
-    private AuthService authService;
+    private UtilisateurService authService;
 
     @PostMapping("/addUser")
-    public ResponseEntity<User> addUser(@RequestBody User user) {
-        System.out.println(user);
-        User registeredUser = this.authService.register(user);
+    public ResponseEntity<UtilsateurEntity> addUser(@RequestBody UtilsateurEntity user) {
+        System.out.println(user.getMotDePasse());
+        UtilsateurEntity registeredUser = this.authService.register(user);
         return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
     }
 
@@ -34,5 +33,9 @@ public class AuthController {
         } else {
             return new ResponseEntity<>("Authentication failed", HttpStatus.UNAUTHORIZED);
         }
+    }
+    @GetMapping("/users")
+    public List<UserDTO> getAllUsers(){
+        return this.authService.getAllUsers();
     }
 }

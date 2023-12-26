@@ -7,11 +7,15 @@ import com.example.hotelmanagertool.entity.ReservationEntity;
 import com.example.hotelmanagertool.entity.enums.ChambreTypeEnum;
 import com.example.hotelmanagertool.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
 @RestController
 @RequestMapping("/api/reservations")
 public class ReservationController {
@@ -22,11 +26,13 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public List<ReservationEntity> getAllReservations() {
         return reservationService.getAllReservations();
     }
 
     @GetMapping("/available")
+
     public List<ChambreEntity> getAvailableRooms(
             @RequestParam("category") ChambreTypeEnum category,
             @RequestParam("startDate") LocalDate startDate,
@@ -34,9 +40,15 @@ public class ReservationController {
 
         return this.reservationService.getAvailableRooms(category,startDate,endDate);
     }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<ReservationEntity>> getUserReservations(@PathVariable Long userId) {
+        List<ReservationEntity> reservations = reservationService.getUserReservations(userId);
+        return new ResponseEntity<>(reservations, HttpStatus.OK);
+    }
 
     @PostMapping("/reserve")
     public ReservationEntity makeReservation(@RequestBody ReservationDTO reservation) throws Exception{
+        System.out.println(reservation.toString());
         return reservationService.makeReservation(reservation);
     }
     @PostMapping("/simulate")

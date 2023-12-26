@@ -17,7 +17,7 @@ public class UtilsateurEntity {
     private String prenom;
     private String email;
     private String motDePasse;
-
+    private String Role;
     @OneToMany(mappedBy = "utilisateur")
     private Set<ReservationEntity> reservations;
 

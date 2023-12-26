@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 @Data
 public class ReservationDetailsDTO {
+    private Long chambreId;
     private ChambreTypeEnum category;
     private Double price;
     private LocalDate startDate;
