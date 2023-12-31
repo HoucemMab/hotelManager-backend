@@ -9,6 +9,8 @@ import com.example.hotelmanagertool.entity.enums.ChambreTypeEnum;
 import com.example.hotelmanagertool.repository.ReservationRepository;
 import com.example.hotelmanagertool.repository.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -32,8 +34,8 @@ public class ReservationService {
         this.mailSender=javaMailSender;
     }
 
-    public List<ReservationEntity> getAllReservations() {
-        return reservationRepository.findAll();
+    public Page<ReservationEntity> getAllReservations(Pageable pageable) {
+        return reservationRepository.findAll(pageable);
     }
 
     public List<ChambreEntity> getAvailableRooms(ChambreTypeEnum category, LocalDate startDate, LocalDate endDate) {

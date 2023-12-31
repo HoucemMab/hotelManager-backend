@@ -7,9 +7,11 @@ import com.example.hotelmanagertool.entity.ReservationEntity;
 import com.example.hotelmanagertool.entity.enums.ChambreTypeEnum;
 import com.example.hotelmanagertool.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -25,10 +27,11 @@ public class ReservationController {
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
     }
-    @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<ReservationEntity> getAllReservations() {
-        return reservationService.getAllReservations();
+    //@PreAuthorize("hasRole('ADMIN')")
+    @GetMapping()
+    public ResponseEntity<Page<ReservationEntity>> getAllReservations(Pageable pageable) {
+        Page<ReservationEntity> reservationsPage = reservationService.getAllReservations(pageable);
+        return new ResponseEntity<>(reservationsPage, HttpStatus.OK);
     }
 
     @GetMapping("/available")

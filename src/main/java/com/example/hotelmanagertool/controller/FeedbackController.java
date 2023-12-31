@@ -3,6 +3,8 @@ package com.example.hotelmanagertool.controller;
 import com.example.hotelmanagertool.entity.FeedbackEntity;
 import com.example.hotelmanagertool.service.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +29,9 @@ public class FeedbackController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<FeedbackEntity>> getAllFeedbacks() {
-        List<FeedbackEntity> feedbacks = feedbackService.getAllFeedbacks();
-        return new ResponseEntity<>(feedbacks, HttpStatus.OK);
+    public ResponseEntity<Page<FeedbackEntity>> getAllFeedbacks(Pageable pageable) {
+        Page<FeedbackEntity> page = feedbackService.getAllFeedbacks(pageable);
+        return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
 }

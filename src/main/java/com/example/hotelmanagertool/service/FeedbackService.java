@@ -3,6 +3,8 @@ package com.example.hotelmanagertool.service;
 import com.example.hotelmanagertool.entity.FeedbackEntity;
 import com.example.hotelmanagertool.repository.FeedbackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,8 +30,8 @@ public class FeedbackService {
         return feedbackRepository.save(feedback);
     }
 
-    public List<FeedbackEntity> getAllFeedbacks() {
-        return feedbackRepository.findAll();
+    public Page<FeedbackEntity> getAllFeedbacks(Pageable page) {
+        return feedbackRepository.findAll(page);
     }
 
 }
