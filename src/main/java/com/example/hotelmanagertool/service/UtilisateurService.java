@@ -7,6 +7,9 @@ import com.example.hotelmanagertool.config.JwtTokenUtil;
 import com.example.hotelmanagertool.entity.UtilsateurEntity;
 import com.example.hotelmanagertool.repository.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -64,10 +67,14 @@ public class UtilisateurService implements UserDetailsService {
                 Collections.emptyList() // You may add user roles here
         );
     }
-    public List<UserDTO> getAllUsers(){
-        List<UtilsateurEntity> users = this.userRepository.findAll();
-        List<UserDTO> userDTOList = new ArrayList<>();
-        users.stream().map(utilsateur -> userDTOList.add(new UserDTO(utilsateur.getId(), utilsateur.getNom(), utilsateur.getPrenom(),utilsateur.getEmail()))).collect(Collectors.toList());
-        return userDTOList;
+    public Page<UserDTO> getAllUsers(Pageable pageable) {
+        Page<UtilsateurEntity> usersPage = this.userRepository.findAll(pageable);
+        List<UserDTO> userDTOList = usersPage.getContent()
+                .stream()
+                .map(utilsateur -> new UserDTO(utilsateur.getId(), utilsateur.getNom(), utilsateur.getPrenom(), utilsateur.getEmail()))
+                .collect(Collectors.toList());
+        // PageImpl will create this sub page and return it
+        return new PageImpl<>(userDTOList, usersPage.getPageable(), usersPage.getTotalElements());
     }
+
 }

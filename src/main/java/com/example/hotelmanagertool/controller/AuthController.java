@@ -5,6 +5,8 @@ import com.example.hotelmanagertool.DTO.UserDTO;
 import com.example.hotelmanagertool.entity.UtilsateurEntity;
 import com.example.hotelmanagertool.service.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +37,7 @@ public class AuthController {
         }
     }
     @GetMapping("/users")
-    public List<UserDTO> getAllUsers(){
-        return this.authService.getAllUsers();
+    public Page<UserDTO> getAllUsers(Pageable page){
+        return this.authService.getAllUsers(page);
     }
 }
